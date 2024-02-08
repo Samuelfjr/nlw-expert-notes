@@ -7,6 +7,8 @@ interface NewNoteCartProps {
   onNoteCreated: (content: string) => void;
 }
 
+let speechRecognition: SpeechRecognition | null = null;
+
 export function NewNoteCart({ onNoteCreated }: NewNoteCartProps) {
   const [shouldShowOnboarding, setShouldShowOnboarding] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
@@ -54,7 +56,7 @@ export function NewNoteCart({ onNoteCreated }: NewNoteCartProps) {
     const SpeechRecognitionAPI =
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    const speechRecognition = new SpeechRecognitionAPI();
+    speechRecognition = new SpeechRecognitionAPI();
 
     speechRecognition.lang = "pt-BR";
     speechRecognition.continuous = true;
@@ -78,6 +80,10 @@ export function NewNoteCart({ onNoteCreated }: NewNoteCartProps) {
 
   function handleStopRecording() {
     setIsRecording(false);
+
+    if (speechRecognition != null) {
+      speechRecognition.stop();
+    }
   }
 
   return (
@@ -144,7 +150,7 @@ export function NewNoteCart({ onNoteCreated }: NewNoteCartProps) {
               </button>
             ) : (
               <button
-                type="submit"
+                type="button"
                 onClick={handleSaveNote}
                 className="w-full bg-lime-400 py-4 text-center text-sm text-lime-950 outline-none font-medium hover:bg-lime-500"
               >
